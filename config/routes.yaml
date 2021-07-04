@@ -1,0 +1,33 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+booking_list:
+  path: /api/v1/bookings
+  controller: App\Controller\BookingController:indexAction
+  methods: [GET]
+
+booking:
+  path: /api/v1/booking/{id}
+  controller: App\Controller\BookingController:findByIdAction
+
+
+booking_create:
+  path: /api/v1/bookings
+  controller: App\Controller\BookingController:createAction
+  methods: [POST]
+
+station_list:
+  path: /api/v1/stations
+  controller: App\Controller\StationController:indexAction
+  methods: [GET]
+
+equipment_list:
+  path: /api/v1/equipments
+  controller: App\Controller\EquipmentController:indexAction
+  methods: [GET]
+
+van_list:
+  path: /api/v1/vans
+  controller: App\Controller\VanController:indexAction
+  methods: [GET]
