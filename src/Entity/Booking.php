@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BookingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,7 +20,7 @@ class Booking
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Van::class)
+     * @ORM\ManyToOne(targetEntity=Van::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $van;
@@ -46,8 +48,17 @@ class Booking
      */
     private $endStation;
 
+    /**
+     * @var Collection|Equipment[]
+     *
+     * @ORM\ManyToMany(targetEntity="Equipment")
+     */
+    private $equipments;
 
-
+    public function __construct()
+    {
+        $this->equipments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -113,4 +124,21 @@ class Booking
 
         return $this;
     }
+
+    /**
+     * @return Equipment[]|Collection
+     */
+    public function getEquipments()
+    {
+        return $this->equipments;
+    }
+
+    /**
+     * @param Equipment[]|Collection $equipments
+     */
+    public function setEquipments($equipments): void
+    {
+        $this->equipments = $equipments;
+    }
+
 }

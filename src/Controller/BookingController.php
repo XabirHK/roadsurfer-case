@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
+use App\Entity\Equipment;
+use App\Entity\EquipmentBooking;
 use App\Form\Type\BookingType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,6 +28,7 @@ class BookingController extends AbstractApiController
 
     public function createAction( Request $request) : Response
     {
+
         $form = $this->buildForm(BookingType::class);
         $form->handleRequest($request);
         if(!$form->isSubmitted() || !$form->isValid()) {

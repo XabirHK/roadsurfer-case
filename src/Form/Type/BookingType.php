@@ -5,10 +5,13 @@ namespace App\Form\Type;
 
 
 use App\Entity\Booking;
+use App\Entity\Equipment;
 use App\Entity\Station;
 use App\Entity\Van;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,6 +52,10 @@ class BookingType extends AbstractType
                 'constraints' => [
                     new NotNull(),
                 ],
+            ])
+            ->add('equipments', EntityType::class, [
+                'class' => Equipment::class,
+                'multiple' => true,
             ])
         ;
     }
