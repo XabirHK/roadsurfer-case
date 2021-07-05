@@ -84,6 +84,7 @@ class Booking
 
     public function setStartDate(\DateTimeInterface $startDate): self
     {
+        $startDate->format('Y-m-d');
         $this->startDate = $startDate;
 
         return $this;
@@ -96,6 +97,7 @@ class Booking
 
     public function setEndDate(\DateTimeInterface $endDate): self
     {
+        $endDate->format('Y-m-d');
         $this->endDate = $endDate;
 
         return $this;

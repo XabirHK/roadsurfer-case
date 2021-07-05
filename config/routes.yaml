@@ -31,3 +31,7 @@ van_list:
   path: /api/v1/vans
   controller: App\Controller\VanController:indexAction
   methods: [GET]
+
+single_station_status:
+  path: /api/v1/station/{id}
+  controller: App\Controller\StationDashboardController:findByStationAction

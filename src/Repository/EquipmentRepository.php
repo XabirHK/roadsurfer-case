@@ -36,15 +36,17 @@ class EquipmentRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Equipment
+
+    public function findOneByType(int $id, string $type): ?Equipment
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('e.id = :id')
+            ->setParameter('id', $id)
+            ->andWhere('e.type = :type')
+            ->setParameter('type', $type)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
 }

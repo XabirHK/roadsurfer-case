@@ -4,9 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Entity\Equipment;
-use App\Entity\EquipmentBooking;
 use App\Form\Type\BookingType;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,12 +24,12 @@ class BookingController extends AbstractApiController
         return $this->respond($booking);
     }
 
-    public function createAction( Request $request) : Response
+    public function createAction(Request $request): Response
     {
 
         $form = $this->buildForm(BookingType::class);
         $form->handleRequest($request);
-        if(!$form->isSubmitted() || !$form->isValid()) {
+        if (!$form->isSubmitted() || !$form->isValid()) {
             return $this->respond($form, Response::HTTP_BAD_REQUEST);
         }
 
@@ -41,8 +39,8 @@ class BookingController extends AbstractApiController
         $rentedEquipments = $booking->getEquipments();
 
         //set equipment status to in transit
-        foreach ($rentedEquipments as $rentedEquipment){
-            $equipment = $this->getDoctrine()->getRepository(Equipment::class)->find(['id' => $rentedEquipment->getId()]);
+        foreach ($rentedEquipments as $rentedEquipment) {
+            $equipment = $this->getDoctrine()->getRepository(Equipment::class)->findOneBy(['id' => $rentedEquipment->getId()]);
             $equipment->setStatus(Equipment::STATUS_INTRANSIT);
             $this->getDoctrine()->getManager()->persist($equipment);
             $this->getDoctrine()->getManager()->flush();

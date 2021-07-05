@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,22 +20,38 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
-    // /**
-    //  * @return Booking[] Returns an array of Booking objects
-    //  */
-    /*
-    public function findByExampleField($value)
+     /**
+     * @return Booking[] Returns an array of Booking objects
+     */
+
+    public function findAllByStartDateGreaterThan(DateTimeInterface $date): array
     {
+        $dateMorning = $date->format('Y-m-d:00:00:00');
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('b.startDate > :dayStart')
+            ->setParameter('dayStart', $dateMorning)
             ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
+            ->groupBy('b.startStation')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
+    public function findByEndStationAndEndDate(int $station, DateTimeInterface $date): array
+    {
+        $dateMorning = $date->format('Y-m-d:00:00:0000');
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.endStation = :station')
+            ->setParameter('station', $station)
+            ->andWhere('b.endDate > :dayStart')
+            ->setParameter('dayStart', $dateMorning)
+            ->orderBy('b.id', 'ASC')
+            ->groupBy('b.endStation')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
     /*
     public function findOneBySomeField($value): ?Booking
