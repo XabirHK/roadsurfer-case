@@ -14,7 +14,7 @@ xampp, mysql , shymphony 5 , php 7.4, composer 1.0
 you will find the sql in /database directory
 
 ### RUN DOCKER
-My system is windows and for docker i have to windows builtin linux WSL
+My system is windows and for docker I have to use windows builtin linux WSL
 which is bit problematic at the moment
 
 I will try to update docker when it is fixed
