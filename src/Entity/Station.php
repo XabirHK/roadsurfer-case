@@ -34,15 +34,6 @@ class Station
      */
     private $longitude;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="station", orphanRemoval=true)
-//     */
-//    private Collection $bookings;
-
-    public function __construct()
-    {
-        //$this->bookings = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -84,23 +75,4 @@ class Station
 
         return $this;
     }
-
-
-//    /**
-//     * @return Collection|array<Booking>
-//     */
-//    public function getBookings(): Collection
-//    {
-//        return $this->bookings;
-//    }
-//
-//    public function addBooking(Booking $booking): self
-//    {
-//        if (!$this->bookings->contains($booking)) {
-//            $this->bookings[] = $booking;
-//            $booking->setStartStation($this);
-//        }
-//
-//        return $this;
-//    }
 }

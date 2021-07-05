@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
-use App\Entity\Equipment;
 use App\Form\Type\BookingType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
