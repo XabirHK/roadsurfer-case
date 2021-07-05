@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Booking;
 use App\Entity\Equipment;
 use App\Entity\Station;
+use App\Utlis\CountEquipment;
 use App\Utlis\Utlis;
 use DateTime;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,10 +15,12 @@ use Symfony\Component\HttpFoundation\Response;
 class StationDashboardApiController extends AbstractApiController
 {
     private Utlis $utlis;
+    private CountEquipment $countEquipment;
 
     public function __construct()
     {
         $this->utlis = new Utlis();
+        $this->countEquipment = new CountEquipment();
     }
 
     /**
@@ -35,12 +38,13 @@ class StationDashboardApiController extends AbstractApiController
 
         foreach ($next7Days as $day) {
 
-            $chairInStation = 0;
-            $chairInTransit = 0;
-            $bedInStation = 0;
-            $bedInTransit = 0;
-            $deskInStation = 0;
-            $deskInTransit = 0;
+            //initialization of Array for count
+            $types = $this->getEquipmentsTypes();
+            foreach ($types as $type){
+                $type = $type['type'];
+                $countInStation[$type] =null;
+                $countInTransit[$type] = null;
+            }
 
             $byEndStationBookings = $this->getDoctrine()->getRepository(Booking::class)->findAllByStartDateGreaterThan($today);
 
@@ -50,134 +54,32 @@ class StationDashboardApiController extends AbstractApiController
 
                     if (!$equipments !== null) {
                         foreach ($equipments as $equipment) {
-                            $chairInStation += $this->countChairInStation($booking, $day, $stationId, $equipment);
-                            $chairInTransit += $this->countChairInTransit($booking, $day, $stationId, $equipment);
-                            $bedInStation += $this->countBedInStation($booking, $day, $stationId, $equipment);
-                            $bedInTransit += $this->countBedInTransit($booking, $day, $stationId, $equipment);
-                            $deskInStation += $this->countDeskInStation($booking, $day, $stationId, $equipment);
-                            $deskInTransit += $this->countDeskInTransit($booking, $day, $stationId, $equipment);
+                            $types = $this->getEquipmentsTypes();
+
+                            foreach ($types as $type){
+                                $type = $type['type'];
+                                $countInStation[$type] += $this->countEquipment->countTypeInStation($booking, $day, $stationId, $equipment, $type);
+                                $countInTransit[$type] += $this->countEquipment->countTypeInTransit($booking, $day, $stationId, $equipment, $type);
+                            }
                         }
                     }
                 }
             }
 
             $data[] = array(
-                'date' => $day,
-                'chairInStation' => $chairInStation,
-                'bedInStation' => $deskInStation,
-                'deskInStation' => $bedInStation,
-                'chairInBooking' => $chairInTransit,
-                'bedInBooking' => $bedInTransit,
-                'deskInBooking' => $deskInTransit
+                 'date' => $day,
+                 'inStation' => $countInStation,
+                 'inBooking' => $countInTransit,
             );
 
         }
         $stationData = array('id' => $station->getId(), 'name' => $station->getName(), 'status' => $data);
+
         return $this->respond($stationData);
     }
 
-    public function countChairInStation(Booking $booking, DateTime $day, int $stationId, Equipment $equipment): int
+    public function getEquipmentsTypes(): ?array
     {
-        $count = 0;
-        $bookingStartDate = $booking->getStartDate();
-        $bookingEndDate = $booking->getEndDate();
-        $bookingStartDate->format('Y-m-d:00:00:00');
-        $bookingEndDate->format('Y-m-d:23:59:59');
-        $day->format('Y-m-d:00:00:00');
-
-        if (
-            ($day >= $bookingEndDate || $day <= $bookingStartDate) &&
-            $booking->getEndStation()->getId() == $stationId && $equipment->getType() == Equipment::TYPE_CHAIR
-        ) {
-            $count = 1;
-        }
-        return $count;
-    }
-
-    public function countChairInTransit(Booking $booking, DateTime $day, int $stationId, Equipment $equipment): int
-    {
-        $count = 0;
-        $bookingStartDate = $booking->getStartDate();
-        $bookingEndDate = $booking->getEndDate();
-        $bookingStartDate->format('Y-m-d:00:00:00');
-        $bookingEndDate->format('Y-m-d:23:59:59');
-        $day->format('Y-m-d:00:00:00');
-        if (
-            ($day >= $bookingStartDate && $day <= $bookingEndDate) &&
-            $booking->getStartStation()->getId() === $stationId && $equipment->getType() === Equipment::TYPE_CHAIR
-        ) {
-            $count = 1;
-        }
-        return $count;
-    }
-
-    public function countBedInStation(Booking $booking, DateTime $day, int $stationId, Equipment $equipment): int
-    {
-        $count = 0;
-        $bookingStartDate = $booking->getStartDate();
-        $bookingEndDate = $booking->getEndDate();
-        $bookingStartDate->format('Y-m-d:00:00:00');
-        $bookingEndDate->format('Y-m-d:23:59:59');
-        $day->format('Y-m-d:00:00:00');
-
-        if (
-            ($day >= $bookingEndDate || $day <= $bookingStartDate) &&
-            $booking->getEndStation()->getId() == $stationId && $equipment->getType() == Equipment::TYPE_BED
-        ) {
-            $count = 1;
-        }
-        return $count;
-    }
-
-    public function countBedInTransit(Booking $booking, DateTime $day, int $stationId, Equipment $equipment): int
-    {
-        $count = 0;
-        $bookingStartDate = $booking->getStartDate();
-        $bookingEndDate = $booking->getEndDate();
-        $bookingStartDate->format('Y-m-d:00:00:00');
-        $bookingEndDate->format('Y-m-d:23:59:59');
-        $day->format('Y-m-d:00:00:00');
-        if (
-            ($day >= $bookingStartDate && $day <= $bookingEndDate) &&
-            $booking->getStartStation()->getId() === $stationId && $equipment->getType() === Equipment::TYPE_BED
-        ) {
-            $count = 1;
-        }
-        return $count;
-    }
-
-    public function countDeskInStation(Booking $booking, DateTime $day, int $stationId, Equipment $equipment): int
-    {
-        $count = 0;
-        $bookingStartDate = $booking->getStartDate();
-        $bookingEndDate = $booking->getEndDate();
-        $bookingStartDate->format('Y-m-d:00:00:00');
-        $bookingEndDate->format('Y-m-d:23:59:59');
-        $day->format('Y-m-d:00:00:00');
-
-        if (
-            ($day >= $bookingEndDate || $day <= $bookingStartDate) &&
-            $booking->getEndStation()->getId() == $stationId && $equipment->getType() == Equipment::TYPE_DESK
-        ) {
-            $count = 1;
-        }
-        return $count;
-    }
-
-    public function countDeskInTransit(Booking $booking, DateTime $day, int $stationId, Equipment $equipment): int
-    {
-        $count = 0;
-        $bookingStartDate = $booking->getStartDate();
-        $bookingEndDate = $booking->getEndDate();
-        $bookingStartDate->format('Y-m-d:00:00:00');
-        $bookingEndDate->format('Y-m-d:23:59:59');
-        $day->format('Y-m-d:00:00:00');
-        if (
-            ($day >= $bookingStartDate && $day <= $bookingEndDate) &&
-            $booking->getStartStation()->getId() === $stationId && $equipment->getType() === Equipment::TYPE_DESK
-        ) {
-            $count = 1;
-        }
-        return $count;
+        return $this->getDoctrine()->getRepository(Equipment::class)->findAllType();
     }
 }

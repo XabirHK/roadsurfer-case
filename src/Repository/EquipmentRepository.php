@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Equipment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -29,6 +30,16 @@ class EquipmentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    public function findAllType(): ?array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e.type')
+            ->distinct('e.type')
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
 }
