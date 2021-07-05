@@ -27,3 +27,6 @@ I will try to update docker when it is fixed
 http://localhost:8000/api/v1/station/{station_id}
 ## Link for HTML dashboard 
 http://localhost:8000/station/dashboard
+
+
+#### N.B. also need to write some unit test after i fix the docker
