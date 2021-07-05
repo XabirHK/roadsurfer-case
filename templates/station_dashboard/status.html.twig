@@ -6,36 +6,32 @@
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    table, th, td {
+        border: aliceblue 2px solid;
+    }
 </style>
 
 <div class="example-wrapper">
     <h1>{{ station.name }}</h1>
     {% for status in station.status %}
-        <table style="border: aliceblue 2px solid">
+        <table>
             <tr>
                 <th>{{ status.date|date('d-m-Y') }}</th>
             </tr>
             <tbody>
             <tr>
-                <td>
-                    Chair in Station: <h3> {{ status.chairInStation }} </h3>
-                </td>
-                <td>
-                    Bed in Station: <h3> {{ status.bedInStation }} </h3>
-                </td>
-                <td>
-                    Desk in Station: <h3> {{ status.deskInStation }} </h3>
-                </td>
+                {% for key,value in status.inStation %}
+                    <td>
+                        <h3>{{ key }} </h3> in Station : <h3> {{ value }} </h3>
+                    </td>
+                {% endfor %}
 
-                <td>
-                    Booked Chair: <h3> {{ status.chairInBooking }} </h3>
-                </td>
-                <td>
-                    Booked Bed :  <h3> {{ status.bedInBooking }} </h3>
-                </td>
-                <td>
-                    Booked Desk : <h3> {{ status.deskInBooking }} </h3>
-                </td>
+                {% for key,value in status.inBooking %}
+                    <td>
+                        <h3>{{ key }} </h3> Booked: <h3> {{ value }} </h3>
+                    </td>
+                {% endfor %}
+
             </tr>
             </tbody>
         </table>
