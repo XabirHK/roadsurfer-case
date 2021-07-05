@@ -52,10 +52,10 @@ class StationDashboardApiController extends AbstractApiController
                         foreach ($equipments as $equipment) {
                             $chairInStation += $this->countChairInStation($booking, $day, $stationId, $equipment);
                             $chairInTransit += $this->countChairInTransit($booking, $day, $stationId, $equipment);
-                            $bedInStation = $this->countBedInStation($booking, $day, $stationId, $equipment);
-                            $bedInTransit = $this->countBedInTransit($booking, $day, $stationId, $equipment);
-                            $deskInStation = $this->countDeskInStation($booking, $day, $stationId, $equipment);
-                            $deskInTransit = $this->countDeskInTransit($booking, $day, $stationId, $equipment);
+                            $bedInStation += $this->countBedInStation($booking, $day, $stationId, $equipment);
+                            $bedInTransit += $this->countBedInTransit($booking, $day, $stationId, $equipment);
+                            $deskInStation += $this->countDeskInStation($booking, $day, $stationId, $equipment);
+                            $deskInTransit += $this->countDeskInTransit($booking, $day, $stationId, $equipment);
                         }
                     }
                 }
