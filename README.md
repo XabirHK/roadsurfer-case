@@ -13,6 +13,10 @@ xampp, mysql , shymphony 5 , php 7.4, composer 1.0
 ### Import initial data
 you will find the sql in /database directory
 
+please use database connection in your .env like the follwing
+
+DATABASE_URL="mysql://user:pass@127.0.0.1:3306/roadsurfer?serverVersion=mariadb-10.4.11"
+
 ### RUN DOCKER
 My system is windows and for docker I have to use windows builtin linux WSL
 which is bit problematic at the moment
