@@ -10,8 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Equipment
 {
-    const STATUS_INSATION = 'inStation';
-    const STATUS_INTRANSIT = 'inTransit';
 
     const TYPE_CHAIR = 'chair';
     const TYPE_BED = 'bed';
@@ -33,17 +31,6 @@ class Equipment
      * @ORM\Column(type="string", columnDefinition="ENUM('chair', 'bed', 'desk')")
      */
     private $type;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Station::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $originStation;
-
-    /**
-     * @ORM\Column(type="string", columnDefinition="ENUM('inStation', 'inTransit')")
-     */
-    private $status;
 
 
     public function getId(): ?int
@@ -71,30 +58,6 @@ class Equipment
     public function setType(string $type): self
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getOriginStation(): ?Station
-    {
-        return $this->originStation;
-    }
-
-    public function setOriginStation(Station $originStation): self
-    {
-        $this->originStation = $originStation;
 
         return $this;
     }

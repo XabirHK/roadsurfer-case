@@ -13,20 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 use function Symfony\Component\String\b;
 
 
-class StationDashboardController extends AbstractApiController
+class StationDashboardApiController extends AbstractApiController
 {
-//    /**
-//     * @Route("/station/dashboard", name="station_dashboard")
-//     */
-//    public function index(): Response
-//    {
-//        return $this->render('station_dashboard/index.html.twig', [
-//            'controller_name' => 'StationDashboardController',
-//        ]);
-//    }
-
     private Utlis $utlis;
-
 
     public function __construct()
     {
@@ -46,7 +35,7 @@ class StationDashboardController extends AbstractApiController
 
         $next7Days = $this->utlis->next7Days($today);
 
-        foreach ($next7Days as $day){
+        foreach ($next7Days as $day) {
 
             $chairInStation = 0;
             $chairInTransit = 0;
@@ -57,12 +46,12 @@ class StationDashboardController extends AbstractApiController
 
             $byEndStationBookings = $this->getDoctrine()->getRepository(Booking::class)->findAllByStartDateGreaterThan($today);
 
-            if(!$byEndStationBookings !== null) {
-                foreach ($byEndStationBookings as $booking){
+            if (!$byEndStationBookings !== null) {
+                foreach ($byEndStationBookings as $booking) {
                     $equipments = $booking->getEquipments();
 
-                    if(!$equipments !== null) {
-                        foreach ($equipments as $equipment){
+                    if (!$equipments !== null) {
+                        foreach ($equipments as $equipment) {
                             $chairInStation += $this->countChairInStation($booking, $day, $stationId, $equipment);
                             $chairInTransit += $this->countChairInTransit($booking, $day, $stationId, $equipment);
                             $bedInStation = $this->countBedInStation($booking, $day, $stationId, $equipment);
@@ -85,11 +74,11 @@ class StationDashboardController extends AbstractApiController
             );
 
         }
-        $stationData = array( 'id' => $station->getId() , 'name' => $station->getName() , 'status' => $data);
+        $stationData = array('id' => $station->getId(), 'name' => $station->getName(), 'status' => $data);
         return $this->respond($stationData);
     }
 
-    public function countChairInStation(Booking $booking, DateTime $day, int $stationId , Equipment $equipment): int
+    public function countChairInStation(Booking $booking, DateTime $day, int $stationId, Equipment $equipment): int
     {
         $count = 0;
         $bookingStartDate = $booking->getStartDate();
@@ -101,7 +90,7 @@ class StationDashboardController extends AbstractApiController
         if (
             ($day >= $bookingEndDate || $day <= $bookingStartDate) &&
             $booking->getEndStation()->getId() == $stationId && $equipment->getType() == Equipment::TYPE_CHAIR
-        ){
+        ) {
             $count = 1;
         }
         return $count;
@@ -116,16 +105,15 @@ class StationDashboardController extends AbstractApiController
         $bookingEndDate->format('Y-m-d:23:59:59');
         $day->format('Y-m-d:00:00:00');
         if (
-            ($day >= $bookingStartDate  && $day <= $bookingEndDate) &&
+            ($day >= $bookingStartDate && $day <= $bookingEndDate) &&
             $booking->getStartStation()->getId() === $stationId && $equipment->getType() === Equipment::TYPE_CHAIR
-        )
-        {
+        ) {
             $count = 1;
         }
         return $count;
     }
 
-    public function countBedInStation(Booking $booking, DateTime $day, int $stationId , Equipment $equipment): int
+    public function countBedInStation(Booking $booking, DateTime $day, int $stationId, Equipment $equipment): int
     {
         $count = 0;
         $bookingStartDate = $booking->getStartDate();
@@ -137,7 +125,7 @@ class StationDashboardController extends AbstractApiController
         if (
             ($day >= $bookingEndDate || $day <= $bookingStartDate) &&
             $booking->getEndStation()->getId() == $stationId && $equipment->getType() == Equipment::TYPE_BED
-        ){
+        ) {
             $count = 1;
         }
         return $count;
@@ -152,16 +140,15 @@ class StationDashboardController extends AbstractApiController
         $bookingEndDate->format('Y-m-d:23:59:59');
         $day->format('Y-m-d:00:00:00');
         if (
-            ($day >= $bookingStartDate  && $day <= $bookingEndDate) &&
+            ($day >= $bookingStartDate && $day <= $bookingEndDate) &&
             $booking->getStartStation()->getId() === $stationId && $equipment->getType() === Equipment::TYPE_BED
-        )
-        {
+        ) {
             $count = 1;
         }
         return $count;
     }
 
-    public function countDeskInStation(Booking $booking, DateTime $day, int $stationId , Equipment $equipment): int
+    public function countDeskInStation(Booking $booking, DateTime $day, int $stationId, Equipment $equipment): int
     {
         $count = 0;
         $bookingStartDate = $booking->getStartDate();
@@ -173,7 +160,7 @@ class StationDashboardController extends AbstractApiController
         if (
             ($day >= $bookingEndDate || $day <= $bookingStartDate) &&
             $booking->getEndStation()->getId() == $stationId && $equipment->getType() == Equipment::TYPE_DESK
-        ){
+        ) {
             $count = 1;
         }
         return $count;
@@ -188,10 +175,9 @@ class StationDashboardController extends AbstractApiController
         $bookingEndDate->format('Y-m-d:23:59:59');
         $day->format('Y-m-d:00:00:00');
         if (
-            ($day >= $bookingStartDate  && $day <= $bookingEndDate) &&
+            ($day >= $bookingStartDate && $day <= $bookingEndDate) &&
             $booking->getStartStation()->getId() === $stationId && $equipment->getType() === Equipment::TYPE_DESK
-        )
-        {
+        ) {
             $count = 1;
         }
         return $count;

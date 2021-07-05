@@ -36,16 +36,6 @@ class BookingController extends AbstractApiController
         /** @var Booking $booking */
         $booking = $form->getData();
 
-        $rentedEquipments = $booking->getEquipments();
-
-        //set equipment status to in transit
-        foreach ($rentedEquipments as $rentedEquipment) {
-            $equipment = $this->getDoctrine()->getRepository(Equipment::class)->findOneBy(['id' => $rentedEquipment->getId()]);
-            $equipment->setStatus(Equipment::STATUS_INTRANSIT);
-            $this->getDoctrine()->getManager()->persist($equipment);
-            $this->getDoctrine()->getManager()->flush();
-        }
-
         $this->getDoctrine()->getManager()->persist($booking);
         $this->getDoctrine()->getManager()->flush();
 

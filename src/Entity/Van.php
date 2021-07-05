@@ -22,10 +22,6 @@ class Van
      */
     private $name;
 
-    /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     */
-    private $type;
 
     public function getId(): ?int
     {
@@ -44,15 +40,4 @@ class Van
         return $this;
     }
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(?string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
 }
